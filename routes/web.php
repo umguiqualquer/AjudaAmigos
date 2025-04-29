@@ -15,7 +15,7 @@ Route:: get('/logout', [LoginController::class, 'destroy'])->name('login.destroy
 
 
 
-Route::group(['middleware' => 'auth'], function(){
+// Route::group(['middleware' => 'auth'], function(){
     Route:: get('/index-user', [userController::class, 'index'])->name('user.index');
     Route:: get('/create-user', [userController::class, 'create'])->name('user.create');
     Route:: post('/store-user', [userController::class, 'store'])->name('user.store');
@@ -28,4 +28,4 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/table-user', [RegisterController::class, 'create'])->name('register.index');
 
-});
+// });

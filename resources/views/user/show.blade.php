@@ -40,6 +40,9 @@
                 <dt class="col-sm-3">Editado</dt>
                 <dd class="col-sm-9">{{ \Carbon\Carbon::parse($user->updated_at)->format('d/m/Y H:i:s') }}</dd>
 
+
+                <img src="/img/users/{{$user->image}}" alt="teste imagem">
+
             </dl>
         </div>
     </div>

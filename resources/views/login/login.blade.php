@@ -7,7 +7,7 @@
         <h1 class="h3 mb-3 fw-normal">Área Restrita</h1>
         <x-alert />
 
-        <form action="{{route('login.process')}}" method="POST">
+        <form action="{{ route('login.process') }}" method="POST">
             @csrf
             @method('POST')
 
@@ -30,7 +30,7 @@
 
             <button class="btn btn-primary w-100 py-2 mb-4" type="submit">Acessar</button>
 
-            <a href="{{route('login.create-user')}}" class="text-decoration-none">Cadastrar</a>
+            <a href="{{route('user.index')}}" class="text-decoration-none">Cadastrar</a>
             
         </form>
     </main>

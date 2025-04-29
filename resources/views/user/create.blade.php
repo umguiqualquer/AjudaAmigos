@@ -22,9 +22,15 @@
 
             <x-alert />
 
-            <form action="{{ route('user.store') }}" method="POST" class="row g-3">
+            <form action="{{ route('user.store') }}" method="POST" class="row g-3" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
+
+                <div class="form-floating mb-4">
+                    <input type="file" name="image" class="form-control-file" id="image"
+                        placeholder="Digite o nome completo" value="{{ old('name') }}">
+                    <label for="image">Imagem do Evento</label>
+                </div>  
 
                 <div class="col-md-12">
                     <label for="name" class="form-label">Nome</label>
