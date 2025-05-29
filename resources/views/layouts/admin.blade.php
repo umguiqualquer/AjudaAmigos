@@ -19,8 +19,18 @@
         </div>
   
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="{{ route('user.index') }}" class="nav-link px-2 link-secondary">Home</a></li>
-          <li><a href="{{ route('user.create') }}" class="nav-link px-2">Cadastrar</a></li>
+          <li><a href="{{ route('dashboard.index') }}" class="nav-link px-2 link-secondary">Home</a></li>
+
+
+          @can('index-user')
+              <li><a href="{{ route('user.index') }}" class="nav-link px-2">Usuários</a></li>
+          @endcan
+          
+          @can('create-user')
+              <li><a href="{{ route('user.create') }}" class="nav-link px-2">Cadastrar</a></li>
+          @endcan
+
+
         </ul>
   
         <div class="col-md-3 text-end">

@@ -26,11 +26,32 @@
                 @csrf
                 @method('POST')
 
-                <div class="form-floating mb-4">
-                    <input type="file" name="image" class="form-control-file" id="image"
-                        placeholder="Digite o nome completo" value="{{ old('name') }}">
-                    <label for="image">Imagem do Evento</label>
-                </div>  
+                <div class="col-md-6">
+                    <input type="file" name="image" class="form-control-file" id="image">
+                    <label for="image"></label>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="roles" class="form-label">Perfil: </label>
+                    <select name="roles" class="form-select" id="roles">
+                        <option value="" disabled {{old('roles', $userRoles ?? 'Aluno') == '' ? 'selected' : ''}}>Selecione</option>
+                        @forelse ($roles as $role)
+                        @if ($role != 'Admin')
+                           <option value="{{$role}}" {{old('roles', $userRoles ?? 'Aluno') == $role ? 'selected' : ''}}>
+                            {{$role}}
+                        </option> 
+                        @else
+                            @if (Auth::user()->hasRole('Admin'))
+                                <option value="{{$role}}" {{old('roles', $userRoles ?? 'Aluno') == $role ? 'selected' : ''}}>
+                                    {{$role}}
+                                </option>
+                            @endif
+                        @endif
+                    @empty
+                        <option value="" disabled>Nenhum papel encontrao</option>
+                    @endforelse
+                    </select>
+                </div>
 
                 <div class="col-md-12">
                     <label for="name" class="form-label">Nome</label>

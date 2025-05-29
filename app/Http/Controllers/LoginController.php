@@ -9,10 +9,11 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 
 class LoginController extends Controller
 {   
-    public function index (){
+    public function index(){
         return view('login.login');
     }
 
@@ -31,7 +32,17 @@ class LoginController extends Controller
         $user = Auth::user();
         $user = User::find($user->id);
 
-        return redirect()->route('user.index');
+        if($user->hasRole('Admin')){
+
+            $permissions = Permission::pluck('name')->toArray();
+        }else{
+
+            $permissions = $user->getPermissionsViaRoles()->pluck('name')->toArray();
+        }
+
+        $user->syncPermissions($permissions);
+
+        return redirect()->route('dashboard.index');
 
     }
 
@@ -45,31 +56,42 @@ class LoginController extends Controller
         // Validar o formulário
         $request->validated();
 
-        // Marca o ponto inicial de uma transação
-        DB::beginTransaction();
+    $user =    User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+            
+        ]);
 
-        try {
+        DB::commit();
+
+    $user->assignRole("Aluno");
+
+    
+        return redirect()->route('login.login')->with('success', 'Usuário cadastrado com sucesso!');
+
+        //CODIGO DO VALTER QUE ESTAVA DANDO ERRO
+
+        // Marca o ponto inicial de uma transação
+        // DB::beginTransaction();
+
+        // try {
 
             // Cadastrar no banco de dados na tabela usuários
-            User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => $request->password,
-            ]);
+
            
             // Operação é concluída com êxito
-            DB::commit();
+            
 
             // Redirecionar o usuário, enviar a mensagem de sucesso
-            return redirect()->route('login')->with('success', 'Usuário cadastrado com sucesso!');
 
-        } catch (Exception $e) {
 
-            // Operação não é concluída com êxito
-            DB::rollBack();
+        // } catch (Exception $e) {
 
-            // Redirecionar o usuário, enviar a mensagem de erro
-            return back()->withInput()->with('error', 'Usuário não cadastrado!');
+        //     // Operação não é concluída com êxito
+        //     DB::rollBack();
+
+        //     // Redirecionar o usuário, enviar a mensagem de erro
+        //     return back()->withInput()->with('error', 'Usuário não cadastrado!');
         }
     }
-}

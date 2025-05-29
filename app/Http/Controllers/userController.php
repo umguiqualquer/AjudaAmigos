@@ -9,20 +9,60 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event as FacadesEvent;
 use Psy\Readline\Hoa\Event as HoaEvent;
 use Symfony\Contracts\EventDispatcher\Event as EventDispatcherEvent;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Spatie\Permission\Models\Role;
 
 class userController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
 
-        //Mostrar a lista
-        $user = User::orderBy('id')->get();
+        // //Mostrar a lista
+        // $user = User::orderBy('id')->get();
 
-        return view('user.index', ['user' => $user]);
+        // return view('user.index', ['user' => $user]);
+
+
+        //Para pesquisar nome ou email da pessoa na lista
+
+        $users = User::when($request->has('name'),function ($whenQuery) use ($request){
+        $whenQuery->where('name', 'like', '%' . $request->name . '%');
+        })
+
+        ->when($request->has('email'), function ($whenQuery) use ($request) {
+            $whenQuery->where('email', 'like', '%' . $request->email . '%');
+        })
+
+        ->orderBy('id')
+        ->paginate(10)
+        ->withQueryString();
+
+        return view('user.index', [
+            'menu'=> 'users',
+            'users' => $users,
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
     }
+
+    public function painel(){
+        return view('dashboard.index');
+    }
+
+
+
+
+
 
     public function create(){
-        return view('user.create');
+        $roles = Role::pluck('name')->all();
+        return view('user.create', ['menu' => 'users', 'roles' => $roles]);
     }
+
+
+
+
+
+
 
     public function show(User $user){
         return view('user.show', ['user' => $user]);
@@ -31,6 +71,11 @@ class userController extends Controller
     public function edit(User $user){
         return view('user.edit', ['user' => $user]);
     }
+
+
+
+
+
 
     public function update(UserRequest $request, User $user){
 
@@ -42,9 +87,23 @@ class userController extends Controller
             'password' => $request->password,
         ]);
 
+
+
+        if ($request->filled('roles')) {
+            $user->syncRoles([$request->roles]);
+        }
+
+
+
         return redirect()->route('user.index')->with('sucess', 'Usuário atualizado com sucesso');
 
     }
+
+
+
+
+
+    
 
     public function destroy(User $user){
         $user->delete();
@@ -81,5 +140,17 @@ class userController extends Controller
 
     }
 
+
+    public function generatePdf(){
+
+
+        //$users = User::where('id', 100)->orderByDesc('id')->get();
+        $users = User::orderBy('id')->get();
+
+        $pdf = PDF::loadView('user.generatePdf', ['users' => $users])->setPaper('a4', 'portrait');
+
+        return $pdf->download('list_users.pdf');
+
     }
 
+}
