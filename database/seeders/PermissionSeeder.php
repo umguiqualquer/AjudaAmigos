@@ -18,6 +18,15 @@ class PermissionSeeder extends Seeder
             'create-user',
             'edit-user',
             'destroy-user',
+
+
+            'index-role',
+            'create-role',
+            'edit-role',
+            'destroy-role',
+
+            'index-role-permission',
+            'update-role-permission',
         ];
 
 

@@ -25,7 +25,11 @@
           @can('index-user')
               <li><a href="{{ route('user.index') }}" class="nav-link px-2">Usuários</a></li>
           @endcan
-          
+
+          @can('index-role')
+            <li><a href="{{ route('role.index') }}" class="nav-link px-2">Perfil</a></li>
+          @endcan          
+
           @can('create-user')
               <li><a href="{{ route('user.create') }}" class="nav-link px-2">Cadastrar</a></li>
           @endcan

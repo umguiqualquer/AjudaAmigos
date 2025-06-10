@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RolePermissionController;
 use App\Http\Controllers\userController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +36,22 @@ Route:: get('/logout', [LoginController::class, 'destroy'])->name('login.destroy
     Route:: get('/table-user', [RegisterController::class, 'create'])->name('register.index')->middleware('permission:table-user');
 
     Route:: get('/generate-pdf-user', [userController::class, 'generatePdf'])->name('user.generate-pdf')->middleware('permission:generate-user');
+
+
+
+    Route:: get('/index-role', [RoleController::class, 'index'])->name('role.index')->middleware('permission:index-role');
+    Route:: get('/create-role', [RoleController::class, 'create'])->name('role.create')->middleware('permission:create-role');
+    Route:: post('/store-role', [RoleController::class, 'store'])->name('role.store')->middleware('permission:store-role');
+    Route:: get('/edit-role/{role}', [RoleController::class, 'edit'])->name('role.edit')->middleware('permission:edit-role');
+    Route:: put('/update-role/{role}', [RoleController::class, 'update'])->name('role.update')->middleware('permission:update-role');
+    Route:: delete('/destroy-role/{role}', [RoleController::class, 'destroy'])->name('role.destroy')->middleware('permission:destroy-role');
+
+
+    
+    
+    Route:: get('/index-role-permission/{role}', [RolePermissionController::class, 'index'])->name('role-permission.index')->middleware('permission:index-role-permission');
+    Route:: get('/update-role-permission/{role}/{permission}', [RolePermissionController::class, 'update'])->name('role-permission.update')->middleware('permission:update-role-permission');
+
+    
 
 // });
